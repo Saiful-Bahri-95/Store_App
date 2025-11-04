@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:store_app/controllers/auth_controller.dart';
 
 import 'login_screen.dart';
 
+// ignore: must_be_immutable
 class RegisterScreen extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final AuthController _authController = AuthController();
+  late String email;
+  late String fullname;
+  late String password;
 
   RegisterScreen({super.key});
 
@@ -53,6 +59,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      email = value;
+                    },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter your email';
@@ -97,6 +106,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      fullname = value;
+                    },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter your full name';
@@ -141,6 +153,9 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
+                    onChanged: (value) {
+                      password = value;
+                    },
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please enter your password';
@@ -175,10 +190,10 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 20),
                   InkWell(
-                    onTap: () {
+                    onTap: () async {
                       if (_formKey.currentState!.validate()) {
                         // Process data.
-                        print('Form is valid');
+                        await _authController;
                       } else {
                         print('Form is invalid');
                       }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 class User {
+  //define field
   final String id;
   final String fullname;
   final String email;
@@ -52,4 +53,9 @@ class User {
       password: map['password'] as String? ?? '',
     );
   }
+
+  //FromJSon: This factory constructor takes JSON string, and decode into Map
+
+  factory User.fromJson(String source) =>
+      User.fromMap(json.decode(source) as Map<String, dynamic>);
 }
