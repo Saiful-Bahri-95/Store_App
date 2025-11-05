@@ -1,8 +1,11 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:store_app/globar_variable.dart';
 import 'package:store_app/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:store_app/views/screens/authentication_screens/login_screen.dart';
+import 'package:store_app/views/screens/main_screen.dart';
 
 import '../services/manage_http_response.dart';
 
@@ -22,6 +25,7 @@ class AuthController {
         city: '',
         locality: '',
         password: password,
+        token: '',
       );
       http.Response response = await http.post(
         //inisialisasi alamat ulr kita
@@ -36,6 +40,10 @@ class AuthController {
         response: response,
         context: context,
         onSuccess: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()),
+          );
           showSnackbar(context, 'Account has been Created');
         },
       );
@@ -62,7 +70,14 @@ class AuthController {
       manageHttpResponse(
         response: response,
         context: context,
-        onSuccess: () {},
+        onSuccess: () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const MainScreen()),
+            (route) => false,
+          );
+          showSnackbar(context, 'Login Successfull');
+        },
       );
     } catch (e) {
       print('Error: $e');

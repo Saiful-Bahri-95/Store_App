@@ -16,6 +16,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthController _authController = AuthController();
   late String email;
   late String password;
+  bool _isLoading = false;
+
+  loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+    await _authController
+        .signInUser(context: context, email: email, password: password)
+        .whenComplete(() {
+          //_formKey.currentState!.reset(); (bisa di gunakan nanti)
+          setState(() {
+            _isLoading = false;
+          });
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -145,14 +160,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(height: 20),
                   InkWell(
-                    onTap: () async {
+                    onTap: () {
                       if (_formKey.currentState!.validate()) {
                         // Process data.
-                        await _authController.signInUser(
-                          context: context,
-                          email: email,
-                          password: password,
-                        );
+                        loginUser();
                       }
                     },
                     child: Container(
@@ -244,15 +255,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Center(
-                            child: Text(
-                              'Sign In',
-                              style: GoogleFonts.getFont(
-                                'Lato',
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            child: _isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    'Sign In',
+                                    style: GoogleFonts.getFont(
+                                      'Lato',
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
                           ),
                         ],
                       ),
