@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:store_app/globar_variable.dart';
 import 'package:store_app/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:store_app/services/manage_http_response.dart';
+
+import '../services/manage_http_response.dart';
 
 class AuthController {
   Future<void> signUpUser({
@@ -36,6 +39,33 @@ class AuthController {
           showSnackbar(context, 'Account has been Created');
         },
       );
-    } catch (e) {}
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  //signin user function
+  Future<void> signInUser({
+    required context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse('$uri/api/signin'),
+        body: jsonEncode({'email': email, 'password': password}),
+        headers: <String, String>{
+          "Content-Type": 'application/json; charset=UTF-8',
+        },
+      );
+      //handle response using the manage http response
+      manageHttpResponse(
+        response: response,
+        context: context,
+        onSuccess: () {},
+      );
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }

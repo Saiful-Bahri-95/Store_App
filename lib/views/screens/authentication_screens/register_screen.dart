@@ -6,14 +6,19 @@ import 'package:store_app/controllers/auth_controller.dart';
 import 'login_screen.dart';
 
 // ignore: must_be_immutable
-class RegisterScreen extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
+  @override
+  State<RegisterScreen> createState() => _RegisterScreenState();
+}
+
+class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final AuthController _authController = AuthController();
   late String email;
   late String fullname;
   late String password;
-
-  RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -193,9 +198,12 @@ class RegisterScreen extends StatelessWidget {
                     onTap: () async {
                       if (_formKey.currentState!.validate()) {
                         // Process data.
-                        await _authController;
-                      } else {
-                        print('Form is invalid');
+                        await _authController.signUpUser(
+                          context: context,
+                          email: email,
+                          fullname: fullname,
+                          password: password,
+                        );
                       }
                     },
                     child: Container(
@@ -233,22 +241,6 @@ class RegisterScreen extends StatelessWidget {
                                     ),
                                   ),
                                   borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 281,
-                            top: -10,
-                            child: Opacity(
-                              opacity: 0.3,
-                              child: Container(
-                                width: 20,
-                                height: 20,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
                             ),
