@@ -1,85 +1,104 @@
 import 'package:flutter/material.dart';
+import 'package:store_app/views/screens/nav_screens/widgets/smal_icon_widget.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
     return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.20,
+      width: width,
+      height: height * 0.20,
       child: Stack(
         children: [
-          Image.asset(
-            'assets/icons/searchBanner.jpeg',
-            width: MediaQuery.of(context).size.width,
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-            left: 48,
-            top: 68,
-            child: SizedBox(
-              width: 250,
-              height: 50,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Enter Text',
-                  hintStyle: TextStyle(
-                    fontSize: 14,
-                    color: const Color.fromARGB(255, 32, 9, 180),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 16,
-                  ),
-                  prefixIcon: Image.asset('assets/icons/searc1.png'),
-                  suffixIcon: Image.asset('assets/icons/cam.png'),
-                  fillColor: Colors.grey.shade200,
-                  filled: true,
-                  focusColor: Colors.black,
-                ),
+          // Background banner
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              child: Image.asset(
+                'assets/icons/searchBanner.jpeg',
+                width: width,
+                height: height * 0.20,
+                fit: BoxFit.cover,
               ),
             ),
           ),
-          Positioned(
-            left: 311,
-            top: 78,
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                onTap: () {},
-                overlayColor: WidgetStatePropertyAll(
-                  const Color.fromARGB(255, 7, 84, 179),
-                ),
-                child: Ink(
-                  width: 31,
-                  height: 31,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/icons/bell.png'),
+
+          // Content
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 38),
+            child: Row(
+              children: [
+                // Search box
+                Expanded(
+                  child: Container(
+                    height: 40, // 🔥 Lebih kecil & konsisten
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.85),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          blurRadius: 6,
+                          color: Colors.black26,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      style: const TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade600,
+                        ),
+
+                        // 🔥 Ikon diperkecil
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/icons/searc1.png',
+                            width: 14,
+                            height: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.all(6),
+                          child: Image.asset(
+                            'assets/icons/cam.png',
+                            width: 14,
+                            height: 14,
+                            color: Colors.black,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.only(top: 6),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Positioned(
-            left: 354,
-            top: 78,
-            child: Material(
-              type: MaterialType.transparency,
-              child: InkWell(
-                onTap: () {},
-                child: Ink(
-                  width: 31,
-                  height: 31,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/icons/message.png'),
-                    ),
-                  ),
+
+                const SizedBox(width: 10),
+
+                // Bell Icon
+                SmallIconWidget(asset: 'assets/icons/bell.png', onTap: () {}),
+
+                const SizedBox(width: 8),
+
+                // Message Icon
+                SmallIconWidget(
+                  asset: 'assets/icons/message.png',
+                  onTap: () {},
                 ),
-              ),
+              ],
             ),
           ),
         ],
