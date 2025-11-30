@@ -11,7 +11,8 @@ class HeaderWidget extends StatelessWidget {
 
     return SizedBox(
       width: width,
-      height: height * 0.20,
+      //ini pengaturan untuk tinggi background header
+      height: height * 0.15,
       child: Stack(
         children: [
           // Background banner
@@ -25,7 +26,7 @@ class HeaderWidget extends StatelessWidget {
               child: Image.asset(
                 'assets/icons/searchBanner.jpeg',
                 width: width,
-                height: height * 0.20,
+                height: height,
                 fit: BoxFit.cover,
               ),
             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:store_app/controllers/category_controller.dart';
 import 'package:store_app/models/category_model.dart';
+import 'package:store_app/views/screens/detail/screens/inner_category_screen.dart';
 import 'package:store_app/views/screens/nav_screens/widgets/reusable_text_widget.dart';
 
 class CategoryItemWidget extends StatefulWidget {
@@ -61,45 +62,57 @@ class _CategoryItemWidgetState extends State<CategoryItemWidget> {
                         ),
                       ],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // GAMBAR
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8),
-                            ),
-                            child: Image.network(
-                              category.image,
-                              fit: BoxFit.cover,
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return InnerCategoryScreen(category: category);
+                            },
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // GAMBAR
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(8),
+                              ),
+                              child: Image.network(
+                                category.image,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
 
-                        // LABEL NAMA
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 0.5,
-                            horizontal: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.vertical(
-                              bottom: Radius.circular(8),
+                          // LABEL NAMA
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 0.5,
+                              horizontal: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(8),
+                              ),
+                            ),
+                            child: Text(
+                              category.name,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
-                          child: Text(
-                            category.name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

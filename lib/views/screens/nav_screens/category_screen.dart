@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:store_app/controllers/category_controller.dart';
+import 'package:store_app/controllers/subcategory_controller.dart';
 import 'package:store_app/models/category_model.dart';
+import 'package:store_app/models/subcategory.dart';
+import 'package:store_app/views/screens/detail/screens/widgets/subcategory_tile_widget.dart';
 import 'package:store_app/views/screens/nav_screens/widgets/header_widget.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -15,10 +18,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
   //future list of categories to be displayed
   late Future<List<Category>> futureCategories;
   Category? _selectedCategory;
+  List<Subcategory> _subcategories = [];
+  final SubcategoryController _subcategoryController = SubcategoryController();
   @override
   void initState() {
     super.initState();
     futureCategories = CategoryController().loadCategories();
+    //once the categories are loaded proccess then
+    futureCategories.then((categories) {
+      for (var category in categories) {
+        if (category.name == 'Fashion') {
+          //if 'Fashion' category is found, set is selected category
+          setState(() {
+            _selectedCategory = category;
+          });
+          _loadSubcategories(category.name);
+        }
+      }
+    });
+  }
+
+  Future<void> _loadSubcategories(String categoryName) async {
+    final subcategories = await _subcategoryController
+        .getSubcategoryBycategoryName(categoryName);
+    setState(() {
+      _subcategories = subcategories;
+    });
   }
 
   @override
@@ -31,6 +56,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         child: HeaderWidget(),
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           //left side display categories
           Expanded(
@@ -57,6 +83,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                             setState(() {
                               _selectedCategory = category;
                             });
+                            _loadSubcategories(category.name);
                           },
                           title: Text(
                             category.name,
@@ -80,32 +107,69 @@ class _CategoryScreenState extends State<CategoryScreen> {
           Expanded(
             flex: 5,
             child: _selectedCategory != null
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _selectedCategory!.name,
-                          style: GoogleFonts.quicksand(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                ? SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _selectedCategory!.name,
+                            style: GoogleFonts.quicksand(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        // Here you can add a widget to display items of the selected category
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            height: 150,
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: NetworkImage(_selectedCategory!.banner),
-                                fit: BoxFit.cover,
+                          // Here you can add a widget to display items of the selected category
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              height: 150,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    _selectedCategory!.banner,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(height: 5),
+                          _subcategories.isNotEmpty
+                              ? GridView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: _subcategories.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 3,
+                                        crossAxisSpacing: 8,
+                                        mainAxisSpacing: 4,
+                                        childAspectRatio: 2 / 3,
+                                      ),
+                                  itemBuilder: (context, index) {
+                                    final subcategory = _subcategories[index];
+                                    return SubcategoryTileWidget(
+                                      image: subcategory.image,
+                                      title: subcategory.subCategoryName,
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'No Subcategories',
+                                      style: GoogleFonts.quicksand(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      ),
                     ),
                   )
                 : Container(),
